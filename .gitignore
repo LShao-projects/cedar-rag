@@ -1,0 +1,6 @@
+.venv/
+.hf-cache/
+__pycache__/
+*.py[cod]
+.DS_Store
+evidence/task2-partner-explanation.md
