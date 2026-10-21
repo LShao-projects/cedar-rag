@@ -1,0 +1,47 @@
+Task 3 actual local run; no borrowed output
+python=3.12.2
+model=sentence-transformers/all-MiniLM-L6-v2
+device=cpu
+sentence-transformers=6.1.0
+numpy=2.5.4
+torch=2.11.0
+transformers=5.20.2
+document_matrix.shape=(6, 384)
+Document embeddings computed once and reused across all questions.
+Scores use full precision for ranking and eight decimals for display.
+
+Q1 k experiment
+Question: May a trained graduate student operate the laser alone at 19:00?
+Required IDs: A1;A2
+
+Embedding retrieval; k=1
+All six scores (descending):
+A2 | access.txt | score=0.68644571
+T1 | training.txt | score=0.58195281
+B1 | booking.txt | score=0.53269607
+A1 | access.txt | score=0.37424889
+T2 | training.txt | score=0.27045223
+B2 | booking.txt | score=0.12873963
+Selected passages:
+[A2] access.txt | score=0.68644571
+The laser room requires two trained people to be present whenever the laser is operating, including during general laboratory access hours.
+Required evidence coverage=1/2
+Evidence complete=False
+
+Embedding retrieval; k=3
+All six scores (descending):
+A2 | access.txt | score=0.68644571
+T1 | training.txt | score=0.58195281
+B1 | booking.txt | score=0.53269607
+A1 | access.txt | score=0.37424889
+T2 | training.txt | score=0.27045223
+B2 | booking.txt | score=0.12873963
+Selected passages:
+[A2] access.txt | score=0.68644571
+The laser room requires two trained people to be present whenever the laser is operating, including during general laboratory access hours.
+[T1] training.txt | score=0.58195281
+Laser training must be renewed every 12 months. A current training record is required before operating the laser.
+[B1] booking.txt | score=0.53269607
+Laser room bookings are limited to two hours per session. Reserve the room through the equipment calendar.
+Required evidence coverage=1/2
+Evidence complete=False

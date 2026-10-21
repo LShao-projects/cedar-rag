@@ -1,14 +1,17 @@
 # Cedar RAG
 
-This teaching project currently contains the Task 1 keyword-overlap baseline and the Task 2 embedding retriever. Both methods load the six supplied Cedar Lab passages, rank them for a question, and print the evidence selected by the retriever. They do not generate an answer.
+Partners: Mingjiao Diao and Liuyixin Shao.
+
+This teaching project contains the Task 1 keyword-overlap baseline, the Task 2 embedding retriever, and the Task 3 retrieval comparison. Both methods load the six supplied Cedar Lab passages, rank them for a question, and print the evidence selected by the retriever. The retriever scripts do not generate answers; Task 4 uses separate evidence-only answer conversations.
 
 ## Environment
 
 Create and activate a Python virtual environment, then install the embedding dependencies recorded for the later task:
 
 ```bash
-python3.12 -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
+export HF_HOME="$PWD/.hf-cache"
 python -m pip install -r requirements-embedding.txt
 ```
 
@@ -60,3 +63,40 @@ The embedding code separates the process into clear stages:
 - Lines 136–165 expose the first 12 coordinate products, the remaining-coordinate subtotal, the full dot product, and an independent cosine calculation.
 
 The document matrix has shape `(6, 384)` because there are six passages with 384 coordinates each. The question vector has shape `(384,)`. All 384 coordinates participate in retrieval even though only the first 12 are printed for inspection.
+
+## Model and package versions
+
+The original Task 2 output in `evidence/embedding-inspection.txt` records `sentence-transformers/all-MiniLM-L6-v2` on CPU with Python 3.12.12, sentence-transformers 6.1.0, numpy 2.5.4, transformers 5.20.1, and torch 2.14.1. Task 3's runtime versions are recorded separately in `evidence/retrieval-runs.txt`.
+
+## Task 3 comparison and k experiment
+
+From the project directory, run:
+
+```bash
+source .venv/bin/activate
+export HF_HOME="$PWD/.hf-cache"
+HF_HUB_OFFLINE=1 python compare_retrieval.py
+```
+
+This runs Q1–Q4 through both retrievers at k=2, then reruns Q1 embedding retrieval at k=1 and k=3. Documents are encoded once and reused. Outputs are `evidence/retrieval-runs.txt`, `evidence/k-experiment.txt`, and `results.csv`. The script initially leaves judgment columns blank; rerunning it resets those columns. The original blank table is preserved at `evidence/results-before-audit.csv`. Current judgments and observations were drafted by Codex for student review, with explanations in `evidence/task3-audit.md`.
+
+At k=2, keyword retrieval has complete evidence for Q1–Q3; embedding retrieval has partial evidence for Q1 and complete evidence for Q2–Q3. Q4 has no answer in the corpus. Increasing Q1 embedding k from 1 to 3 still omits A1 and leaves required coverage at 1/2. Task 4 answers and audits are saved in the evidence folder.
+
+## Task 4 answers and claim audits
+
+Q1 and Q4 were answered in two fresh projectless Codex conversations using only the question, embedding k=2 selected passages, and the assignment answer prompt. No full corpus or project folder was attached. The reviewed answer turns contain no tool calls for browsing or reading files.
+
+- `evidence/answer-audit-Q1.md` preserves the exact prompt, original answer, claim audit, one instruction revision, revised answer, and reassessment. The original omitted the missing access-hours warning; the revised answer explicitly states it.
+- `evidence/answer-audit-Q4.md` preserves the exact prompt, original answer, and claim audit. It correctly says wavelength cannot be determined from the supplied passages, so no rerun was necessary.
+
+The Task 3 judgments and Task 4 audits were drafted by Codex and reviewed and confirmed by Mingjiao Diao.
+
+## Reflection
+
+### Mingjiao Diao
+
+In this project, I learned how a question becomes an answer with citations. First, the retriever selects passages using keyword overlap or embedding similarity. Then, those passages are given to Codex to write an answer, which needs to be checked against the sources.
+
+One result that stood out was Q1. The embedding method found A2 but missed A1, so it could support the rule against operating alone but could not establish the access hours. Increasing k to 3 still did not recover A1. This showed me that a relevant passage is not always enough for a complete answer.
+
+Next, I would test combining keyword and embedding results to see whether that improves evidence coverage.
