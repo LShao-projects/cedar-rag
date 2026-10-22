@@ -64,6 +64,8 @@ The embedding code separates the process into clear stages:
 
 The document matrix has shape `(6, 384)` because there are six passages with 384 coordinates each. The question vector has shape `(384,)`. All 384 coordinates participate in retrieval even though only the first 12 are printed for inspection.
 
+The largest displayed coordinate is `0.1357` at coordinate 12 of T1. The smallest is `-0.1167` at coordinate 5 of T1. Neither value alone explains what T1 means because similarity depends on all 384 coordinates together.
+
 ## Model and package versions
 
 The original Task 2 output in `evidence/embedding-inspection.txt` records `sentence-transformers/all-MiniLM-L6-v2` on CPU with Python 3.12.12, sentence-transformers 6.1.0, numpy 2.5.4, transformers 5.20.1, and torch 2.14.1. Task 3's runtime versions are recorded separately in `evidence/retrieval-runs.txt`.
@@ -100,3 +102,9 @@ In this project, I learned how a question becomes an answer with citations. Firs
 One result that stood out was Q1. The embedding method found A2 but missed A1, so it could support the rule against operating alone but could not establish the access hours. Increasing k to 3 still did not recover A1. This showed me that a relevant passage is not always enough for a complete answer.
 
 Next, I would test combining keyword and embedding results to see whether that improves evidence coverage.
+
+### Liuyixin Shao
+
+We built two ways to retrieve evidence for a question. The first approach counts distinct words shared between the question and each passage after removing stopwords, then ranks the passages by the number of matching words. The second approach uses embeddings to encode the passages and question and keeps the top k by cosine similarity. After retrieval, only the question and selected passages (with their chunk IDs) go to a new Codex conversation, with a prompt asking it to cite the supporting chunk ID after each statement in its answer.
+
+One failure we observed was Q1. Embedding retrieval missed A1, even when we tried k = 1, 2, 3, while keyword retrieval did select A1. Next, I think a hybrid retriever would be what we want to test, because keyword matching and embedding similarity each have their own strengths, and combining them might improve the retrieval accuracy.
