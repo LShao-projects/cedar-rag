@@ -80,7 +80,7 @@ export HF_HOME="$PWD/.hf-cache"
 HF_HUB_OFFLINE=1 python compare_retrieval.py
 ```
 
-This runs Q1–Q4 through both retrievers at k=2, then reruns Q1 embedding retrieval at k=1 and k=3. Documents are encoded once and reused. Outputs are `evidence/retrieval-runs.txt`, `evidence/k-experiment.txt`, and `results.csv`. The script initially leaves judgment columns blank; rerunning it resets those columns. The original blank table is preserved at `evidence/results-before-audit.csv`. Current judgments and observations were drafted by Codex for student review, with explanations in `evidence/task3-audit.md`.
+This runs Q1–Q4 through both retrievers at k=2, then reruns Q1 embedding retrieval at k=1 and k=3. Documents are encoded once and reused. Outputs are `evidence/retrieval-runs.txt`, `evidence/k-experiment.txt`, and `results.csv`. The script initially leaves judgment columns blank; rerunning it resets those columns. The original blank table is preserved at `evidence/results-before-audit.csv`.
 
 At k=2, keyword retrieval has complete evidence for Q1–Q3; embedding retrieval has partial evidence for Q1 and complete evidence for Q2–Q3. Q4 has no answer in the corpus. Increasing Q1 embedding k from 1 to 3 still omits A1 and leaves required coverage at 1/2. Task 4 answers and audits are saved in the evidence folder.
 
@@ -90,8 +90,6 @@ Q1 and Q4 were answered in two fresh projectless Codex conversations using only 
 
 - `evidence/answer-audit-Q1.md` preserves the exact prompt, original answer, claim audit, one instruction revision, revised answer, and reassessment. The original omitted the missing access-hours warning; the revised answer explicitly states it.
 - `evidence/answer-audit-Q4.md` preserves the exact prompt, original answer, and claim audit. It correctly says wavelength cannot be determined from the supplied passages, so no rerun was necessary.
-
-The Task 3 judgments and Task 4 audits were drafted by Codex and reviewed and confirmed by Mingjiao Diao.
 
 ## Reflection
 
